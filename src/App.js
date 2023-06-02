@@ -60,7 +60,8 @@ const arr = [
 
 function App() {
 
-  const [volume, setVolume] = useState(1);  
+  const [volume, setVolume] = useState(1);
+  const [track, setTrack] = useState('')
 
   return (
 
@@ -70,30 +71,35 @@ function App() {
         <div id="display"></div>
         <div className='drum-pads'>
           {arr.map((clip) => (
-            <Pad key={clip.id} clip={clip} volume={volume}/>
+            <Pad key={clip.id} clip={clip} volume={volume} setTrack={setTrack}/>
           ))}
         </div>
         <br/>
         <div className='volume text-center'>
-          <h4>Volume</h4>
+          {/* <h4>Volume</h4> */}
           <input 
-            onChange={(e) => 
-              setVolume(e.target.value)
-            }
+            onChange={(e) => setVolume(e.target.value)}
             type="range" 
             step="0.01"
             value={volume}
             max="1"
             min="0"
             className='w-50'
-          ></input>
+          />
+        </div>
+        <div className='track text-center'>
+          <h1 className='text-light mt-4'>Track</h1>
+          <div className="track-box">
+            <p className='text-center text-light'>{track}</p>
+          </div>
+          
         </div>
       </div>
     </div>
   );
 }
 
-function Pad({ clip, volume }){
+function Pad({ clip, volume, setTrack }){
 
   const [active, setActive] = useState(false);
 
@@ -102,7 +108,7 @@ function Pad({ clip, volume }){
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     }
-  }, []); 
+  }); 
 
 
   const handleKeyPress = (e) => {
@@ -118,6 +124,7 @@ function Pad({ clip, volume }){
     audio.volume = volume;
     audio.currentTime = 0;
     audio.play();
+    setTrack(prev => prev + clip.text + " ");
   }
 
   return (
@@ -127,10 +134,10 @@ function Pad({ clip, volume }){
         playSound(clip.text)
       }} 
       id={clip.src} 
-      className={`drum-pad bg-secondary ${active && "bg-info"}`}
+      className={`drum-pad bg-secondary noselect ${active && "bg-warning text-light"}`}
       >
       {clip.text}
-      <audio className='clip' id={clip.text} src={clip.src} />
+      <audio className='clip ' id={clip.text} src={clip.src} />
     </div>
   );
 }

@@ -76,7 +76,7 @@ function App() {
         </div>
         <br/>
         <div className='volume text-center'>
-          {/* <h4>Volume</h4> */}
+          <h4>Volume</h4>
           <input 
             onChange={(e) => setVolume(e.target.value)}
             type="range" 
@@ -88,11 +88,10 @@ function App() {
           />
         </div>
         <div className='track text-center'>
-          <h1 className='text-light mt-4'>Track</h1>
+          <h4 className='text-center text-light mt-4'>Track</h4>
           <div className="track-box">
-            <p className='text-center text-light'>{track}</p>
+            <p className='text-light'>{track}</p>
           </div>
-          
         </div>
       </div>
     </div>

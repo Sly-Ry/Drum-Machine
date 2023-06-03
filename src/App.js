@@ -60,23 +60,37 @@ const arr = [
 
 function App() {
 
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(0.5);
   const [track, setTrack] = useState('')
+  const [speed, setSpeed] = useState(0.5);
+
+  const playTrack = () => {
+    let index = 0;
+    let trackArr = track.split(' ');
+
+    const interval = setInterval(() => {
+      const audio = document.getElementById(trackArr[index])
+      audio.volume = volume;
+      audio.currentTime = 0;
+      audio.play();
+      index++;
+    }, speed * 600);
+
+    // wait to clear with callback function
+    setTimeout(() =>
+      clearInterval(interval), 600 * speed * trackArr.length - 1
+    );
+  }
 
   return (
 
-
     <div className="App">
       <div id='drum-machine'>
-        <div id="display"></div>
-        <div className='drum-pads'>
-          {arr.map((clip) => (
-            <Pad key={clip.id} clip={clip} volume={volume} setTrack={setTrack}/>
-          ))}
+        <div id="display" className='text-center text-white mb-4'>
+          <h1>WOOMBAT</h1>
         </div>
-        <br/>
         <div className='volume text-center'>
-          <h4>Volume</h4>
+          <i class="fa fa-volume-off" aria-hidden="true"></i>
           <input 
             onChange={(e) => setVolume(e.target.value)}
             type="range" 
@@ -86,11 +100,43 @@ function App() {
             min="0"
             className='w-50'
           />
+          <i className="volume-up fa fa-volume-up" aria-hidden="true"></i>
         </div>
+        <div className='drum-pads'>
+          {arr.map((clip) => (
+            <Pad key={clip.id} clip={clip} volume={volume} setTrack={setTrack}/>
+          ))}
+        </div>
+        <br/>
         <div className='track text-center'>
-          <h4 className='text-center text-light mt-4'>Track</h4>
-          <div className="track-box">
+          <div>
             <p className='text-light'>{track}</p>
+            <div className='speed text-center pt-2'>
+              <i className="fa fa-fire" aria-hidden="true"></i>
+              <input 
+                onChange={(e) => setSpeed(e.target.value)}
+                type="range" 
+                step="0.01"
+                value={speed}
+                max="1.2"
+                min="0.1"
+                className='w-50'
+              />
+              <i className="fa fa-snowflake-o" aria-hidden="true"></i>
+            </div>
+            {track && (
+            <>
+            <div className='buttons'>
+              <button onClick={playTrack} className='play btn btn-primary d-flex justify-content-center align-items-center'>
+                <i className="fa fa-play" aria-hidden="true"></i>
+              </button>
+              <button onClick={() => setTrack("")}className='clear btn btn-danger d-flex justify-content-center align-items-center'>
+                <i class="fa fa-ban" aria-hidden="true"></i>
+              </button>
+            </div>
+            
+            </>
+            )}
           </div>
         </div>
       </div>
